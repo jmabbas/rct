@@ -6,14 +6,33 @@ import AddItem from "./AddItem";
 import SearchItem from "./SearchItem";
 
 function App() {
-    const [items, setItem] = useState([])
+  const API_URL ='http://localhost:3500/items';
+
+  const [items, setItem] = useState([])
 
   const [newItem, setNewItem] = useState('')
 
   const [search, setSearch] = useState('')
 
+  const [fetchError, setFetcherror] =useState(null)
+
+  const [isLoding, setLoading] = useState(true)
+
   useEffect (()=>{
-    JSON.parse (localStorage.getItem('todo_list'))
+    const fetchItems = async () => {
+      try {
+        const response = await fetch(API_URL);
+        if(!response.ok) throw Error ("Data not received");
+        const listItems = await response.json();
+        setItem(listItems)
+        setFetcherror(null)
+      } catch (err) {
+        setFetcherror(err.message)
+      } finally {
+          setLoading(false)
+      }
+    }
+    (async () => fetchItems()) ()
   },[])
 
   const addItem = (item) => {
@@ -21,21 +40,17 @@ function App() {
     const addNewItem = {id, checked: false, item}
     const listItems = [...items, addNewItem]
     setItem(listItems)
-    localStorage.setItem("todo_list",JSON.stringify(listItems))
-
   }
 
   const handleChange =(id) => {
       const listItems = items.map ((item) =>
       item.id===id ? {...item, checked:!item.checked} : item)
       setItem(listItems)
-      localStorage.setItem("todo_list",JSON.stringify(listItems))
   }
 
   const handleDelet =(id) => {
       const listItems = items.filter((item)=>item.id!==id)
       setItem(listItems);
-      localStorage.setItem("todo_list",JSON.stringify(listItems))
   }
 
   const handleSubmit = (e) => {
@@ -48,7 +63,7 @@ function App() {
 
   return (
     <div className="App">
-      <Header title="first-one"/>
+      <Header title="Todo App"/>
       <AddItem 
         newItem = {newItem}
         setNewItem = {setNewItem}
@@ -58,11 +73,16 @@ function App() {
         search={search}
         setSearch={setSearch}
       />
-      <Content 
-      items={items.filter(item => ((item.item).
-      toLowerCase()).includes(search.toLocaleLowerCase()))}
-      handleChange={handleChange} 
-      handleDelet={handleDelet} />
+      <main>
+        {isLoding && <p> Loading items...</p>}
+        {fetchError && <p>{`Error ${fetchError}`}</p>}
+        { !isLoding && !fetchError && <Content 
+          items={items.filter(item => ((item.item).
+          toLowerCase()).includes(search.toLocaleLowerCase()))}
+          handleChange={handleChange} 
+          handleDelet={handleDelet} />
+        }
+      </main>
       <Footer length = {items.length}/>
     </div>
   );

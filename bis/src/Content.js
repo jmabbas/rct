@@ -4,7 +4,7 @@ import LineItems from './IineItems'
 const Content = ({handleChange,handleDelet,items}) => {
 
   return (
-    <main>
+    <>
         {(items.length) ? (
          <LineItems handleChange={handleChange} 
          handleDelet={handleDelet} 
@@ -12,7 +12,7 @@ const Content = ({handleChange,handleDelet,items}) => {
          />
         ): 
         <p>your list is empty</p>} 
-    </main>
+    </>
   )
 }
 
