@@ -54,15 +54,34 @@ function App() {
     if(result) setFetcherror(result)
   }
 
-  const handleChange =(id) => {
+  const handleChange =async (id) => {
       const listItems = items.map ((item) =>
       item.id===id ? {...item, checked:!item.checked} : item)
       setItem(listItems)
+
+      const myItem = listItems.filter((item) => item.id===id)
+
+      const updateOPtion = {
+        method: 'PATCH',
+        headers:{
+          'Content-Type' : 'application/json'
+        },
+        body: JSON.stringify({checked:myItem[0].checked})
+      }
+
+      const reqURL = `${API_URL}/${id}`
+      const result = await apiRequest(reqURL, updateOPtion)
+      if(result) setFetcherror(result)
   }
 
-  const handleDelet =(id) => {
+  const handleDelet =async(id) => {
       const listItems = items.filter((item)=>item.id!==id)
       setItem(listItems);
+
+      const deleteOptions = {method: 'DELETE'}
+      const reqURL = `${API_URL}/${id}`
+      const result = await apiRequest(reqURL, deleteOptions)
+      if(result) setFetcherror (result)
   }
 
   const handleSubmit = (e) => {
