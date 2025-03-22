@@ -1,36 +1,23 @@
-import { useState, useEffect } from 'react';
-import Form from './Form';
-import List from './List';
-import Table from './Table';
+import { Link, Route, Routes } from "react-router-dom";
+import About from "./About";
+import Footer from "./Footer";
+import Header from "./Header";
+import Home from "./Home";
+import Newpost from "./Newpost";
 
 function App() {
-  const API_URL = 'https://jsonplaceholder.typicode.com/';
-
-  const [reqType, setReqtype] = useState('users');
-  const [items, setItems] = useState([]);
-
-  useEffect(()=>{
-    const fetchItems = async () => {
-      try {
-        const response = await fetch(`${API_URL}${reqType}`);
-
-        const data = await response.json();
-        setItems(data);
-        console.log (data);
-      } catch (err) {
-        console.log(err);
-      }
-    }
-
-    fetchItems();
-    
-  },[reqType])
-
   return (
     <div className="App">
-      <Form reqType={reqType} setReqtype={setReqtype} />
-      {/* <List items={items} /> */}
-      <Table items={items} />
+      <ul>
+        <li><Link to="/">Home</Link></li>
+        <li><Link to="/about">About</Link></li>
+        <li><Link to="/newpost">Newpost</Link></li>
+      </ul>
+      <Routes>
+        <Route path="/" element={<Home />  }/>
+        <Route path="/about" element={<About />  }/>
+        <Route path="/newpost" element={<Newpost />}/>
+      </Routes>
     </div>
   );
 }
