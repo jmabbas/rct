@@ -8,25 +8,53 @@ import Postpage from "./Postpage";
 import { Missing } from "./Missing";
 import { PostLayout } from "./PostLayout";
 import Post from "./Post";
+import { useState } from "react";
+import Nav from "./Nav";
 
 function App() {
+  const [posts, setPosts] = useState([
+    {
+      id:1,
+      title: "My first Post",
+      datetime: "July 01, 2021",
+      body :"Made a video for first post"
+    },
+    {
+      id:2,
+      title: "My second Post",
+      datetime: "July 02, 2022",
+      body :"Made a video for second post"
+    },
+    {
+      id:3,
+      title: "My third Post",
+      datetime: "July 03, 2023",
+      body :"Made a video for third post"
+    },
+    {
+      id:4,
+      title: "My fourth Post",
+      datetime: "July 04, 2024",
+      body :"Made a video for fourth post"
+    },
+  ])
+  const [search, setSearch] =useState('')
+  const [searchResults, setSearchResults]= useState([])
+
   return (
     <div className="App">
-      <ul> 
-        <li><Link to="/">Home</Link></li>
-        <li><Link to="/about">About</Link></li>
-        <li><Link to="/postpage">Postpage</Link></li>
-      </ul>
-      <Routes>
-        <Route path="/" element={<Home />  }/>
-        <Route path="/about" element={<About />  }/>
-        <Route path="/postpage" element={<PostLayout />}> 
-          <Route index element={<Postpage/>}/>
-          <Route path=":id" element={<Post/>}/>
-          <Route path="newpost" element={<Newpost />}/>
-        </Route>
-        <Route path="*" element={<Missing />}/> 
-      </Routes>
+      <Header title="Social Media" />
+      <Nav 
+        search={search}
+        setSearch ={setSearch}
+      />
+      <Home />
+      <Newpost />
+      <Postpage />
+      <About />
+      <Missing />
+      <Footer />
+
     </div>
   );
 }

@@ -4,9 +4,9 @@ import { Link } from 'react-router-dom'
 const Postpage = () => {
 return (
     <main>
-        <h1>
+        <div>
             PostPage
-        </h1>
+        </div>
         <br /><br />
     </main>
   )
