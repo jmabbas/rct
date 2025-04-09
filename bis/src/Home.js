@@ -1,8 +1,21 @@
-import React from 'react'
+import Feed from "./Feed"
 
-const Home = () => {
+const Home = ({posts}) => {
   return (
-    <div>Home</div>
+    <main className='Home'>
+      {posts.length ? (
+        <Feed posts={posts}/>
+      ) : (
+        <p>
+          <br/>
+          <br/>
+          No Posts to display
+          <br/>
+          <br/>
+        </p>
+      )
+      }
+    </main>
   )
 }
 
