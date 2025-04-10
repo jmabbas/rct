@@ -1,4 +1,4 @@
-import { Link, Route, Routes } from "react-router-dom";
+import { Link, Route, Routes, useNavigate } from "react-router-dom";
 import About from "./About";
 import Footer from "./Footer";
 import Header from "./Header";
@@ -8,7 +8,7 @@ import Postpage from "./Postpage";
 import { Missing } from "./Missing";
 import { PostLayout } from "./PostLayout";
 import Post from "./Post";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Nav from "./Nav";
 import {format} from "date-fns"
 
@@ -43,6 +43,16 @@ function App() {
   const [searchResults, setSearchResults]= useState([])
   const [postTitle, setPostTitle] = useState('');
   const [postBody, setPostBody] = useState('');
+  const navigate = useNavigate();
+
+  useEffect(()=> {
+    const filterResults = posts.filter((post)=>
+      (post.body.toLocaleLowerCase()).includes(search.toLocaleLowerCase()) || 
+      (post.title.toLocaleLowerCase()).includes(search.toLocaleLowerCase()));
+
+      setSearchResults(filterResults.reverse());
+
+  },[posts, search])
 
   const hadleSubmit = (e) => {
     e.preventDefault();
@@ -53,6 +63,13 @@ function App() {
     setPosts(allPosts);
     setPostTitle('');
     setPostBody('');
+    navigate('/')
+  }
+
+  const handleDelete = (id) => {
+    const postList = posts.filter(post => post.id !==id);
+    setPosts (postList);
+    navigate('/')
   }
 
   return (
@@ -62,11 +79,21 @@ function App() {
         search={search}
         setSearch ={setSearch}
       />
-      <Home posts = {posts}/>
-      <Newpost />
-      <Postpage />
-      <About />
-      <Missing />
+      <Routes>
+        <Route path="/" element={<Home posts = {searchResults}/>} />
+        <Route path="post">
+            <Route index element={<Newpost 
+                hadleSubmit={hadleSubmit}
+                postTitle={postTitle}
+                setPostTitle={setPostTitle}
+                postBody={postBody}
+                setPostBody={setPostBody}
+            />}/>
+            <Route path=":id" element={<Postpage posts={posts} handleDelete={handleDelete}/>} />
+        </Route>
+        <Route path="about" element={<About />}/>
+        <Route path="*" element={<Missing />}/>
+      </Routes>
       <Footer />
 
     </div>
