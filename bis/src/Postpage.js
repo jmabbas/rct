@@ -18,6 +18,12 @@ const Postpage = ({posts, handleDelete}) => {
                         </button>
                     </>
                 }
+
+                {!post &&
+                    <>
+                        Post not Found
+                    </>
+                }
             </article>
         </main>    
     )
