@@ -1,24 +1,30 @@
+//npx json-server -p 3500 -w data/db.json
+
 {
-  "items": [
+  "posts": [
     {
-      "id": "1",
-      "checked": true,
-      "item": "visit"
+      "id":1,
+      "title": "My first Post",
+      "datetime": "July 01, 2021",
+      "body":"Made a video for first post"
     },
     {
-      "id": "311",
-      "checked": true,
-      "item": "fom1"
+      "id":2,
+      "title": "My second Post",
+      "datetime": "July 02, 2022",
+      "body":"Made a video for second post"
     },
     {
-      "id": "3111",
-      "checked": true,
-      "item": "fomr2"
+      "id":3,
+      "title": "My third Post",
+      "datetime": "July 03, 2023",
+      "body":"Made a video for third post"
     },
     {
-      "id": "31111",
-      "checked": false,
-      "item": "form 3"
+      "id":4,
+      "title": "My fourth Post",
+      "datetime": "July 04, 2024",
+      "body":"Made a video for fourth post"
     }
   ]
 }
