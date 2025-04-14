@@ -1,5 +1,3 @@
-//npx json-server -p 3500 -w data/db.json
-
 import { Link, Route, Routes, useNavigate } from "react-router-dom";
 import About from "./About";
 import Footer from "./Footer";
