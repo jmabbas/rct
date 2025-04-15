@@ -1,7 +1,7 @@
-import { useParams } from "react-router-dom"
+import { Link, useParams } from "react-router-dom"
 
 
-const Postpage = ({posts, handleDelete}) => {
+const Postpage = ({posts, handleDelete,handleEdit}) => {
     const {id} = useParams();
     const post = posts.find(post=> (post.id).toString()=== id);
 
@@ -13,6 +13,11 @@ const Postpage = ({posts, handleDelete}) => {
                         <h2>{post.title}</h2>
                         <p className="postDate">{post.datetime}</p>
                         <p className="postBody">{post.body}</p>
+                        <Link to={`/edit/${post.id}`}>
+                            <button onClick={()=>handleEdit(post.id)}>
+                                Edit Post
+                            </button>
+                        </Link>
                         <button onClick={()=>handleDelete(post.id)}>
                             Delete Post
                         </button>

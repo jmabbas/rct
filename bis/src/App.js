@@ -12,6 +12,7 @@ import { useEffect, useState } from "react";
 import Nav from "./Nav";
 import {format} from "date-fns"
 import api from "./api/posts";
+import EditPost from "./EditPost";
 
 function App() {
   const [posts, setPosts] = useState([])
@@ -19,6 +20,8 @@ function App() {
   const [searchResults, setSearchResults]= useState([])
   const [postTitle, setPostTitle] = useState('');
   const [postBody, setPostBody] = useState('');
+  const [editTitle, setEditTitle] = useState('');
+  const [editBody, setEditBody] = useState('');
   const navigate = useNavigate();
 
   useEffect(()=>{
@@ -48,22 +51,46 @@ function App() {
 
   },[posts, search])
 
-  const hadleSubmit = (e) => {
+  const hadleSubmit = async(e) => {
     e.preventDefault();
     const id = posts.length ? posts[posts.length-1]. id +1: 1;
     const datetime = format(new Date(), 'MMMM dd, yyyy pp');
     const newPost = {id, title : postTitle, datetime, body: postBody};
-    const allPosts = [...posts, newPost]
-    setPosts(allPosts);
-    setPostTitle('');
-    setPostBody('');
-    navigate('/')
+    try {
+      const response = await api.post('/posts', newPost)
+      const allPosts = [...posts, newPost]
+      setPosts(allPosts);
+      setPostTitle('');
+      setPostBody('');
+      navigate('/')
+    } catch (err) {
+        console.log(`Error ${err.message}`);
+    }
   }
 
-  const handleDelete = (id) => {
-    const postList = posts.filter(post => post.id !==id);
-    setPosts (postList);
-    navigate('/')
+  const handleEdit = async (id) => {
+    const datetime= format(new Date(), 'MMMM dd, yyyy pp');
+    const updatePost = {id, title: editTitle, datetime, body: editBody };
+    try{
+      const response = await api.put(`/posts/${id}`, updatePost)
+      setPosts(posts.map(post=> post.id===id ? {...response.data}:post));
+      setEditTitle('');
+      setEditBody('');
+      navigate('/')
+    } catch (err) {
+      console.log(`Error: ${err.message}`);
+    }
+  }
+
+  const handleDelete = async(id) => {
+    try{
+      await api.delete(`/posts/${id}`);
+      const postList = posts.filter(post => post.id !==id);
+      setPosts (postList);
+      navigate('/')
+    } catch (err) {
+      console.log(`Error ${err.message}`)
+    }
   }
 
   return (
@@ -83,8 +110,12 @@ function App() {
                 postBody={postBody}
                 setPostBody={setPostBody}
             />}/>
-            <Route path=":id" element={<Postpage posts={posts} handleDelete={handleDelete}/>} />
+            <Route path=":id" element={<Postpage handleEdit={handleEdit} posts={posts} handleDelete={handleDelete}/>} />
         </Route>
+        <Route path="/edit/:id" element={<EditPost posts={posts}
+          handleEdit={handleEdit} editBody={editBody} setEditBody={setEditBody}
+          editTitle ={editTitle} setEditTitle = {setEditTitle}   
+        />}/>
         <Route path="about" element={<About />}/>
         <Route path="*" element={<Missing />}/>
       </Routes>
