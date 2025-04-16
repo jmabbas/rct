@@ -51,7 +51,7 @@ function App() {
 
   },[posts, search])
 
-  const hadleSubmit = async(e) => {
+  const hadleSubmit = async (e) => {
     e.preventDefault();
     const id = posts.length ? posts[posts.length-1]. id +1: 1;
     const datetime = format(new Date(), 'MMMM dd, yyyy pp');
@@ -71,9 +71,11 @@ function App() {
   const handleEdit = async (id) => {
     const datetime= format(new Date(), 'MMMM dd, yyyy pp');
     const updatePost = {id, title: editTitle, datetime, body: editBody };
+    
     try{
       const response = await api.put(`/posts/${id}`, updatePost)
-      setPosts(posts.map(post=> post.id===id ? {...response.data}:post));
+      setPosts(posts.map(post=> post.id===id ? {...response.data} : post));
+      console.log(setPosts);
       setEditTitle('');
       setEditBody('');
       navigate('/')
@@ -112,10 +114,11 @@ function App() {
             />}/>
             <Route path=":id" element={<Postpage handleEdit={handleEdit} posts={posts} handleDelete={handleDelete}/>} />
         </Route>
-        <Route path="/edit/:id" element={<EditPost posts={posts}
+        <Route path="/edit/:id" element={
+          <EditPost posts={posts}
           handleEdit={handleEdit} editBody={editBody} setEditBody={setEditBody}
-          editTitle ={editTitle} setEditTitle = {setEditTitle}   
-        />}/>
+          editTitle ={editTitle} setEditTitle = {setEditTitle} />
+        }/>
         <Route path="about" element={<About />}/>
         <Route path="*" element={<Missing />}/>
       </Routes>
