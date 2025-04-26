@@ -47,18 +47,18 @@ export const DataProvider =({children}) => {
   
     const hadleSubmit = async (e) => {
       e.preventDefault();
-      const id = posts.length ? posts[posts.length-1]. id +1: 1;
+      const id = posts.length ? Math.max(...posts.map(post => post.id)) + 1 : 1;
       const datetime = format(new Date(), 'MMMM dd, yyyy pp');
-      const newPost = {id, title : postTitle, datetime, body: postBody};
+      const newPost = { id, title: postTitle, datetime, body: postBody };
       try {
-        const response = await api.post('/posts', newPost)
-        const allPosts = [...posts, newPost]
+        const response = await api.post('/posts', newPost);
+        const allPosts = [...posts, response.data]; // use backend-generated ID
         setPosts(allPosts);
         setPostTitle('');
         setPostBody('');
         navigate('/')
       } catch (err) {
-          console.log(`Error ${err.message}`);
+        console.log(`Error: ${err.message}`);
       }
     }
   
